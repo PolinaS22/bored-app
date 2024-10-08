@@ -1,23 +1,38 @@
-import logo from './logo.svg';
+
+import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+
+  const [activity, setActivity] = useState('');
+
+  const getActivity =  useCallback(async () => {
+      const response = await fetch('https://bored.api.lewagon.com/api/activity');
+      const data = await response.json();
+      setActivity(data) 
+  }, [])
+  
+  useEffect(()=> {
+    getActivity()
+  }, [getActivity])
+  
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <p>Idea №: {activity.key}</p>
+        <p>{activity.activity}</p>
+        <p>Type: {activity.type}</p>
+        <p>Participants: {activity.participants}</p>
+      </div>
+
+      <div>
+        <button onClick={getActivity}>click</button>
+      </div>
+      
+
+
     </div>
   );
 }
